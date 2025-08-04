@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "PRODUTO")
 public class Produto {
 
     @Id
@@ -49,9 +48,6 @@ public class Produto {
     @Column(name = "ESTOQUE_MAXIMO")
     private Integer estoqueMaximo;
 
-    @Column(name = "LOCALIZACAO", length = 100)
-    private String localizacao;
-
     @Column(name = "DATA_VALIDADE")
     private Date dataValidade;
 
@@ -88,7 +84,6 @@ public class Produto {
         this.estoqueAtual = estoqueAtual;
         this.estoqueMinimo = estoqueMinimo;
         this.estoqueMaximo = estoqueMaximo;
-        this.localizacao = localizacao;
         this.dataValidade = dataValidade;
         this.fornecedor = fornecedor;
         this.ativo = ativo;
@@ -174,12 +169,6 @@ public class Produto {
 
     public void setEstoqueMaximo(Integer estoqueMaximo) {
         this.estoqueMaximo = estoqueMaximo; }
-
-    public String getLocalizacao() {
-        return localizacao; }
-
-    public void setLocalizacao(String localizacao) {
-        this.localizacao = localizacao; }
 
     public Date getDataValidade() {
         return dataValidade; }

@@ -37,7 +37,6 @@ public class Cliente {
     private Boolean ativo;
 
     public Cliente() {
-        // Construtor padrão necessário para JPA
     }
 
     public Cliente(Long id, String nome, String sexo, String cpf, String rg, Date dataNascimento, Date dataCadastro, String observacoes, Boolean ativo) {
@@ -51,8 +50,6 @@ public class Cliente {
         this.observacoes = observacoes;
         this.ativo = ativo;
     }
-
-    // Getters e Setters
 
     public Long getId() {
         return id;

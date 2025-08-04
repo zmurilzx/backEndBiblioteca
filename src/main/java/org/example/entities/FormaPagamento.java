@@ -5,7 +5,6 @@ import jakarta.validation.constraints.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "FORMA_PAGAMENTO")
 public class FormaPagamento {
 
     @Id

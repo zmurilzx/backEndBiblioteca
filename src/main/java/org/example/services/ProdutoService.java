@@ -50,7 +50,6 @@ public class ProdutoService {
         existente.setEstoqueAtual(produtoAtualizado.getEstoqueAtual());
         existente.setEstoqueMinimo(produtoAtualizado.getEstoqueMinimo());
         existente.setEstoqueMaximo(produtoAtualizado.getEstoqueMaximo());
-        existente.setLocalizacao(produtoAtualizado.getLocalizacao());
         existente.setDataValidade(produtoAtualizado.getDataValidade());
         existente.setFornecedor(produtoAtualizado.getFornecedor());
         existente.setAtivo(produtoAtualizado.getAtivo());
