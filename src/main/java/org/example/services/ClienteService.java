@@ -1,61 +1,48 @@
 package org.example.services;
 
+import org.example.dto.ClienteDTO;
 import org.example.entities.Cliente;
+import org.example.exceptions.ClienteNotFoundException;
+import org.example.mappers.ClienteMapper;
 import org.example.repositories.ClienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
+    private final ClienteMapper clienteMapper;
 
-    @Autowired
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper) {
         this.clienteRepository = clienteRepository;
+        this.clienteMapper = clienteMapper;
     }
 
-    public List<Cliente> listarTodos() {
-        return clienteRepository.findAll();
+    public ClienteDTO salvar(ClienteDTO dto) {
+        Cliente cliente = clienteMapper.toEntity(dto);
+        Cliente salvo = clienteRepository.save(cliente);
+        return clienteMapper.toDTO(salvo);
     }
 
-    public Cliente buscarPorId(Long id) {
+    public ClienteDTO buscarPorId(Long id) {
         return clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado com ID: " + id));
+                .map(clienteMapper::toDTO)
+                .orElseThrow(() -> new ClienteNotFoundException("Cliente com ID " + id + " não encontrado."));
     }
 
-    public Cliente buscarPorRg(String rg) {
-        return clienteRepository.findByRg(rg)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado com RG: " + rg));
-    }
-
-    public Cliente buscarPorCpf(String cpf) {
-        return clienteRepository.findByCpf(cpf)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado com CPF: " + cpf));
-    }
-
-    public Cliente salvar(Cliente cliente) {
-        return clienteRepository.save(cliente);
-    }
-
-    public Cliente atualizar(Long id, Cliente clienteAtualizado) {
-        Cliente existente = buscarPorId(id);
-        existente.setNome(clienteAtualizado.getNome());
-        existente.setRg(clienteAtualizado.getRg());
-        existente.setCpf(clienteAtualizado.getCpf());
-        existente.setSexo(clienteAtualizado.getSexo());
-        existente.setObservacoes(clienteAtualizado.getObservacoes());
-        existente.setAtivo(clienteAtualizado.getAtivo());
-        existente.setDataCadastro(clienteAtualizado.getDataCadastro());
-        existente.setDataNascimento(clienteAtualizado.getDataNascimento());
-        return clienteRepository.save(existente);
+    public List<ClienteDTO> listarTodos() {
+        return clienteRepository.findAll()
+                .stream()
+                .map(clienteMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public void deletar(Long id) {
         if (!clienteRepository.existsById(id)) {
-            throw new RuntimeException("Cliente não encontrado com ID: " + id);
+            throw new ClienteNotFoundException("Cliente com ID " + id + " não encontrado.");
         }
         clienteRepository.deleteById(id);
     }

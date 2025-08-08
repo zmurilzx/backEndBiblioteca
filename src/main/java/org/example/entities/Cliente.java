@@ -1,6 +1,7 @@
 package org.example.entities;
 
 import jakarta.persistence.*;
+import org.example.enums.Sexo;
 
 import java.util.Date;
 
@@ -15,8 +16,9 @@ public class Cliente {
     @Column(name = "NOME", nullable = false, length = 100)
     private String nome;
 
-    @Column(name = "SEXO", nullable = false, unique = true, length = 50)
-    private String sexo;
+    @Enumerated(EnumType.STRING) // Salva como texto no banco
+    @Column(name = "SEXO", nullable = false, length = 50)
+    private Sexo sexo;
 
     @Column(name = "CPF", nullable = false, unique = true, length = 14)
     private String cpf;
@@ -36,10 +38,9 @@ public class Cliente {
     @Column(name = "ATIVO", length = 50)
     private Boolean ativo;
 
-    public Cliente() {
-    }
+    public Cliente() {}
 
-    public Cliente(Long id, String nome, String sexo, String cpf, String rg, Date dataNascimento, Date dataCadastro, String observacoes, Boolean ativo) {
+    public Cliente(Long id, String nome, Sexo sexo, String cpf, String rg, Date dataNascimento, Date dataCadastro, String observacoes, Boolean ativo) {
         this.id = id;
         this.nome = nome;
         this.sexo = sexo;
@@ -63,20 +64,20 @@ public class Cliente {
         this.nome = nome;
     }
 
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
+    }
+
     public String getCpf() {
         return cpf;
     }
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
     }
 
     public String getRg() {

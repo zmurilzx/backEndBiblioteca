@@ -1,112 +1,42 @@
 package org.example.dto;
 
-    public class ClienteDTO {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
+import org.example.enums.Sexo;
 
-        private Long id;
-        private String rua;
-        private String numero;
-        private String bairro;
-        private String cidade;
-        private String estado;
-        private String cep;
-        private String telefone;
-        private String celular;
-        private String email;
+import java.util.Date;
 
-        public ClienteDTO() {
-        }
+public class ClienteDTO {
 
-        public ClienteDTO(Long id, String rua, String numero, String bairro, String cidade,
-                          String estado, String cep, String telefone, String celular, String email) {
-            this.id = id;
-            this.rua = rua;
-            this.numero = numero;
-            this.bairro = bairro;
-            this.cidade = cidade;
-            this.estado = estado;
-            this.cep = cep;
-            this.telefone = telefone;
-            this.celular = celular;
-            this.email = email;
-        }
+    private Long id;
 
-        public Long getId() {
-            return id;
-        }
+    @NotBlank(message = "O nome é obrigatório")
+    @Size(max = 100, message = "O nome deve ter no máximo 100 caracteres")
+    private String nome;
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+    @NotNull(message = "O sexo é obrigatório")
+    private Sexo sexo;
 
-        public String getRua() {
-            return rua;
-        }
+    @NotBlank(message = "O CPF é obrigatório")
+    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF inválido (formato: 000.000.000-00)")
+    private String cpf;
 
-        public void setRua(String rua) {
-            this.rua = rua;
-        }
+    @NotBlank(message = "O RG é obrigatório")
+    @Size(max = 9, message = "O RG deve ter no máximo 9 caracteres")
+    private String rg;
 
-        public String getNumero() {
-            return numero;
-        }
+    @Past(message = "A data de nascimento deve ser no passado")
+    private Date dataNascimento;
 
-        public void setNumero(String numero) {
-            this.numero = numero;
-        }
+    private Date dataCadastro;
 
-        public String getBairro() {
-            return bairro;
-        }
+    @Size(max = 20, message = "As observações devem ter no máximo 20 caracteres")
+    private String observacoes;
 
-        public void setBairro(String bairro) {
-            this.bairro = bairro;
-        }
+    private Boolean ativo;
 
-        public String getCidade() {
-            return cidade;
-        }
-
-        public void setCidade(String cidade) {
-            this.cidade = cidade;
-        }
-
-        public String getEstado() {
-            return estado;
-        }
-
-        public void setEstado(String estado) {
-            this.estado = estado;
-        }
-
-        public String getCep() {
-            return cep;
-        }
-
-        public void setCep(String cep) {
-            this.cep = cep;
-        }
-
-        public String getTelefone() {
-            return telefone;
-        }
-
-        public void setTelefone(String telefone) {
-            this.telefone = telefone;
-        }
-
-        public String getCelular() {
-            return celular;
-        }
-
-        public void setCelular(String celular) {
-            this.celular = celular;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-    }
+    // Getters e Setters
+}
