@@ -1,10 +1,14 @@
 package org.example.controllers;
 
-import org.example.entities.Cliente;
+import jakarta.validation.Valid;
+import org.example.dto.ClienteDTO;
+import org.example.enums.Sexo;
 import org.example.services.ClienteService;
+import org.example.exceptions.ClienteNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -18,64 +22,54 @@ public class ClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> listarTodos() {
-        List<Cliente> clientes = clienteService.listarTodos();
+    public ResponseEntity<List<ClienteDTO>> listarTodos() {
+        List<ClienteDTO> clientes = clienteService.listarTodos();
         return ResponseEntity.ok(clientes);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarPorId(@PathVariable Long id) {
-        try {
-            Cliente cliente = clienteService.buscarPorId(id);
-            return ResponseEntity.ok(cliente);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable Long id) {
+        ClienteDTO cliente = clienteService.buscarPorId(id);
+        return ResponseEntity.ok(cliente);
     }
 
     @GetMapping("/rg/{rg}")
-    public ResponseEntity<Cliente> buscarPorRg(@PathVariable String rg) {
-        try {
-            Cliente cliente = clienteService.buscarPorRg(rg);
-            return ResponseEntity.ok(cliente);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ClienteDTO> buscarPorRg(@PathVariable String rg) {
+        ClienteDTO cliente = clienteService.buscarPorRg(rg);
+        return ResponseEntity.ok(cliente);
     }
 
     @GetMapping("/cpf/{cpf}")
-    public ResponseEntity<Cliente> buscarPorCpf(@PathVariable String cpf) {
-        try {
-            Cliente cliente = clienteService.buscarPorCpf(cpf);
-            return ResponseEntity.ok(cliente);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ClienteDTO> buscarPorCpf(@PathVariable String cpf) {
+        ClienteDTO cliente = clienteService.buscarPorCpf(cpf);
+        return ResponseEntity.ok(cliente);
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> criar(@RequestBody Cliente cliente) {
-        Cliente criado = clienteService.salvar(cliente);
+    public ResponseEntity<ClienteDTO> criar(@Valid @RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO criado = clienteService.salvar(clienteDTO);
         return ResponseEntity.ok(criado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizar(@PathVariable Long id, @RequestBody Cliente clienteAtualizado) {
-        try {
-            Cliente atualizado = clienteService.atualizar(id, clienteAtualizado);
-            return ResponseEntity.ok(atualizado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ClienteDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO atualizado = clienteService.atualizar(id, clienteDTO);
+        return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        try {
-            clienteService.deletar(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        clienteService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/sexos")
+    public ResponseEntity<List<Sexo>> listarSexos() {
+        return ResponseEntity.ok(Arrays.asList(Sexo.values()));
+    }
+
+    @ExceptionHandler(ClienteNotFoundException.class)
+    public ResponseEntity<Void> tratarNaoEncontrado() {
+        return ResponseEntity.notFound().build();
     }
 }

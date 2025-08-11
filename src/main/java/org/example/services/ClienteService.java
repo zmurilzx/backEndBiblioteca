@@ -46,4 +46,31 @@ public class ClienteService {
         }
         clienteRepository.deleteById(id);
     }
+
+    public ClienteDTO buscarPorCpf(String cpf) {
+        return clienteRepository.findByCpf(cpf)
+                .map(clienteMapper::toDTO)
+                .orElseThrow(() -> new ClienteNotFoundException("Cliente com CPF " + cpf + " não encontrado."));
+    }
+
+    public ClienteDTO buscarPorRg(String rg) {
+        return clienteRepository.findByRg(rg)
+                .map(clienteMapper::toDTO)
+                .orElseThrow(() -> new ClienteNotFoundException("Cliente com RG " + rg + " não encontrado."));
+    }
+
+    public ClienteDTO atualizar(Long id, ClienteDTO clienteDTO) {
+        Cliente clienteExistente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ClienteNotFoundException("Cliente com ID " + id + " não encontrado."));
+
+        Cliente clienteAtualizado = clienteMapper.toEntity(clienteDTO);
+
+        clienteAtualizado.setId(clienteExistente.getId());
+
+        Cliente salvo = clienteRepository.save(clienteAtualizado);
+
+        return clienteMapper.toDTO(salvo);
+    }
+
+
 }

@@ -119,4 +119,7 @@ public class Cliente {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
+
+    public void setId(Long id) {
+    }
 }
