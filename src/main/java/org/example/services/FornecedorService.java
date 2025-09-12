@@ -31,6 +31,13 @@ public class FornecedorService {
                 .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com CNPJ: " + cnpj));
     }
 
+    public void validarCnpj(String cnpj) {
+        // Exemplo simples: verificar se tem 14 dígitos numéricos
+        if (cnpj == null || !cnpj.matches("\\d{14}")) {
+            throw new IllegalArgumentException("CNPJ inválido");
+        }
+    }
+
     public Fornecedor salvar(Fornecedor fornecedor) {
         return fornecedorRepository.save(fornecedor);
     }

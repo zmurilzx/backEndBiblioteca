@@ -7,6 +7,4 @@ public enum FormaPagamento {
     BOLETO,
     PIX,
     TRANSFERENCIA_BANCARIA,
-    CHEQUE
-
 }

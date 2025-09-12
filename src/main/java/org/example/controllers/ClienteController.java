@@ -2,7 +2,6 @@ package org.example.controllers;
 
 import jakarta.validation.Valid;
 import org.example.dto.ClienteDTO;
-import org.example.enums.Sexo;
 import org.example.services.ClienteService;
 import org.example.exceptions.ClienteNotFoundException;
 import org.springframework.http.ResponseEntity;

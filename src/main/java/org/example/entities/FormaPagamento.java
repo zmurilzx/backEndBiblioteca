@@ -54,6 +54,10 @@ public class FormaPagamento {
         return id;
     }
 
+    public Long setId(Long id) {
+        return this.id = id;
+    }
+
     public String getDescricao() {
         return descricao;
     }

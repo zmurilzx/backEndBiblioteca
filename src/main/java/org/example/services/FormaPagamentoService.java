@@ -1,58 +1,79 @@
 package org.example.services;
 
+import org.example.dto.FormaPagamentoDTO;
 import org.example.entities.FormaPagamento;
+import org.example.exceptions.FormaPagamentoNotFoundException;
+import org.example.mappers.FormaPagamentoMapper;
 import org.example.repositories.FormaPagamentoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FormaPagamentoService {
 
     private final FormaPagamentoRepository formaPagamentoRepository;
+    private final FormaPagamentoMapper formaPagamentoMapper;
 
-    @Autowired
-    public FormaPagamentoService(FormaPagamentoRepository formaPagamentoRepository) {
+    public FormaPagamentoService(FormaPagamentoRepository formaPagamentoRepository, FormaPagamentoMapper formaPagamentoMapper) {
         this.formaPagamentoRepository = formaPagamentoRepository;
+        this.formaPagamentoMapper = formaPagamentoMapper;
     }
 
-    public List<FormaPagamento> listarTodos() {
-        return formaPagamentoRepository.findAll();
+    public FormaPagamentoDTO salvar(FormaPagamentoDTO dto) {
+        // Validações básicas
+        if (dto.getTipo() == null || dto.getTipo().isBlank()) {
+            throw new IllegalArgumentException("Tipo de forma de pagamento não pode ser vazio");
+        }
+        if (dto.getParcelas() != null && dto.getParcelas() < 1) {
+            throw new IllegalArgumentException("Parcelas devem ser maiores ou iguais a 1");
+        }
+        if (dto.getDiasEntreParcelas() != null && dto.getDiasEntreParcelas() < 0) {
+            throw new IllegalArgumentException("Dias entre parcelas não pode ser negativo");
+        }
+        FormaPagamento formaPagamento = formaPagamentoMapper.toEntity(dto);
+        FormaPagamento salvo = formaPagamentoRepository.save(formaPagamento);
+        return formaPagamentoMapper.toDTO(salvo);
     }
 
-    public FormaPagamento buscarPorId(Long id) {
+    public FormaPagamentoDTO buscarPorId(Long id) {
         return formaPagamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Forma de pagamento não encontrada com ID: " + id));
+                .map(formaPagamentoMapper::toDTO)
+                .orElseThrow(() -> new FormaPagamentoNotFoundException("Forma de pagamento com ID " + id + " não encontrada."));
     }
 
-    public FormaPagamento buscarPorDescricao(String descricao) {
-        return formaPagamentoRepository.findByDescricao(descricao)
-                .orElseThrow(() -> new RuntimeException("Forma de pagamento não encontrada com descrição: " + descricao));
-    }
-
-    public FormaPagamento salvar(FormaPagamento formaPagamento) {
-        return formaPagamentoRepository.save(formaPagamento);
-    }
-
-    public FormaPagamento atualizar(Long id, FormaPagamento formaPagamentoAtualizado) {
-        FormaPagamento existente = buscarPorId(id);
-
-        existente.setDescricao(formaPagamentoAtualizado.getDescricao());
-        existente.setTipo(formaPagamentoAtualizado.getTipo());
-        existente.setNumeroParcelas(formaPagamentoAtualizado.getNumeroParcelas());
-        existente.setDiasEntreParcelas(formaPagamentoAtualizado.getDiasEntreParcelas());
-        existente.setPermiteTroco(formaPagamentoAtualizado.isPermiteTroco());
-        existente.setTaxaPercentual(formaPagamentoAtualizado.getTaxaPercentual());
-        existente.setAtivo(formaPagamentoAtualizado.isAtivo());
-
-        return formaPagamentoRepository.save(existente);
+    public List<FormaPagamentoDTO> listarTodos(int pagina, int tamanho) {
+        Page<FormaPagamento> page = formaPagamentoRepository.findAll(PageRequest.of(pagina, tamanho));
+        return page.stream()
+                .map(formaPagamentoMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public void deletar(Long id) {
         if (!formaPagamentoRepository.existsById(id)) {
-            throw new RuntimeException("Forma de pagamento não encontrada com ID: " + id);
+            throw new FormaPagamentoNotFoundException("Forma de pagamento com ID " + id + " não encontrada.");
         }
         formaPagamentoRepository.deleteById(id);
+    }
+
+    public FormaPagamentoDTO atualizar(Long id, FormaPagamentoDTO dto) {
+        FormaPagamento formaPagamentoExistente = formaPagamentoRepository.findById(id)
+                .orElseThrow(() -> new FormaPagamentoNotFoundException("Forma de pagamento com ID " + id + " não encontrada."));
+
+        FormaPagamento formaPagamentoAtualizado = formaPagamentoMapper.toEntity(dto);
+        formaPagamentoAtualizado.setId(formaPagamentoExistente.getId());
+
+        FormaPagamento salvo = formaPagamentoRepository.save(formaPagamentoAtualizado);
+        return formaPagamentoMapper.toDTO(salvo);
+    }
+
+    public List<FormaPagamentoDTO> buscarPorTipo(String tipo, int pagina, int tamanho) {
+        Page<FormaPagamento> page = formaPagamentoRepository.findByTipoContainingIgnoreCase(tipo, PageRequest.of(pagina, tamanho));
+        return page.stream()
+                .map(formaPagamentoMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

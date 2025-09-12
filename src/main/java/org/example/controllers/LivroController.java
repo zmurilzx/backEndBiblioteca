@@ -19,14 +19,28 @@ public class LivroController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LivroDTO>> listarTodos() {
-        return ResponseEntity.ok(livroService.listarTodos());
+    public ResponseEntity<List<LivroDTO>> listarTodos(
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "10") int tamanho) {
+        return ResponseEntity.ok(livroService.listarTodos(pagina, tamanho));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<LivroDTO> buscarPorId(@PathVariable Long id) {
         LivroDTO livro = livroService.buscarPorId(id);
         return ResponseEntity.ok(livro);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<LivroDTO>> buscarPorTitulo(
+            @RequestParam String titulo,
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "10") int tamanho) {
+        List<LivroDTO> livros = livroService.buscarPorTitulo(titulo, pagina, tamanho);
+        if (livros.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(livros);
     }
 
     @PostMapping

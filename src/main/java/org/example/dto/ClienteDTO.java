@@ -1,42 +1,67 @@
+// FileName: /backEndBiblioteca/src/main/java/org/example/dto/ClienteDTO.java
 package org.example.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import org.example.enums.Sexo;
-
-import java.util.Date;
 
 public class ClienteDTO {
 
     private Long id;
 
-    @NotBlank(message = "O nome é obrigatório")
-    @Size(max = 100, message = "O nome deve ter no máximo 100 caracteres")
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(max = 100, message = "Nome deve ter no máximo 100 caracteres")
     private String nome;
 
-    @NotNull(message = "O sexo é obrigatório")
-    private Sexo sexo;
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Email inválido")
+    private String email;
 
-    @NotBlank(message = "O CPF é obrigatório")
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF inválido (formato: 000.000.000-00)")
-    private String cpf;
+    @Size(max = 15, message = "Telefone deve ter no máximo 15 caracteres")
+    private String telefone;
 
-    @NotBlank(message = "O RG é obrigatório")
-    @Size(max = 9, message = "O RG deve ter no máximo 9 caracteres")
-    private String rg;
+    // Construtores (opcional)
+    public ClienteDTO() {
+    }
 
-    @Past(message = "A data de nascimento deve ser no passado")
-    private Date dataNascimento;
+    public ClienteDTO(Long id, String nome, String email, String telefone) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.telefone = telefone;
+    }
 
-    private Date dataCadastro;
+    // Getters e setters
 
-    @Size(max = 20, message = "As observações devem ter no máximo 20 caracteres")
-    private String observacoes;
+    public Long getId() {
+        return id;
+    }
 
-    private Boolean ativo;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    // Getters e Setters
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
 }

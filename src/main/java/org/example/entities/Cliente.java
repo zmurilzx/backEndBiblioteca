@@ -1,7 +1,6 @@
 package org.example.entities;
 
 import jakarta.persistence.*;
-import org.example.enums.Sexo;
 
 import java.util.Date;
 
