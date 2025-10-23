@@ -1,6 +1,7 @@
 package org.example.entities;
 
 import jakarta.persistence.*;
+import org.example.enums.Sexo;
 
 import java.util.Date;
 
@@ -15,7 +16,7 @@ public class Cliente {
     @Column(name = "NOME", nullable = false, length = 100)
     private String nome;
 
-    @Enumerated(EnumType.STRING) // Salva como texto no banco
+    @Enumerated(EnumType.STRING)
     @Column(name = "SEXO", nullable = false, length = 50)
     private Sexo sexo;
 

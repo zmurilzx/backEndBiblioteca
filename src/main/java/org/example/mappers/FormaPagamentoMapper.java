@@ -1,4 +1,3 @@
-// FileName: /backEndBiblioteca/src/main/java/org/example/mappers/FormaPagamentoMapper.java
 package org.example.mappers;
 
 import org.example.dto.FormaPagamentoDTO;

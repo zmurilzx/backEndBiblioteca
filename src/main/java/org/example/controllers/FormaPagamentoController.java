@@ -1,6 +1,6 @@
 package org.example.controllers;
 
-import org.example.entities.FormaPagamento;
+import org.example.dto.FormaPagamentoDTO;
 import org.example.services.FormaPagamentoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,41 +18,44 @@ public class FormaPagamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamento>> listarTodos() {
-        List<FormaPagamento> formas = formaPagamentoService.listarTodos();
+    public ResponseEntity<List<FormaPagamentoDTO>> listarTodos() {
+        List<FormaPagamentoDTO> formas = formaPagamentoService.listarTodos();
         return ResponseEntity.ok(formas);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FormaPagamento> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<FormaPagamentoDTO> buscarPorId(@PathVariable Long id) {
         try {
-            FormaPagamento forma = formaPagamentoService.buscarPorId(id);
+            FormaPagamentoDTO forma = formaPagamentoService.buscarPorId(id);
             return ResponseEntity.ok(forma);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/descricao/{descricao}")
-    public ResponseEntity<FormaPagamento> buscarPorDescricao(@PathVariable String descricao) {
-        try {
-            FormaPagamento forma = formaPagamentoService.buscarPorDescricao(descricao);
-            return ResponseEntity.ok(forma);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/tipo")
+    public ResponseEntity<List<FormaPagamentoDTO>> buscarPorTipo(
+            @RequestParam String tipo,
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "10") int tamanho) {
+
+        List<FormaPagamentoDTO> formas = formaPagamentoService.buscarPorTipo(tipo, pagina, tamanho);
+        return ResponseEntity.ok(formas);
     }
 
     @PostMapping
-    public ResponseEntity<FormaPagamento> criar(@RequestBody FormaPagamento formaPagamento) {
-        FormaPagamento criado = formaPagamentoService.salvar(formaPagamento);
+    public ResponseEntity<FormaPagamentoDTO> criar(@RequestBody FormaPagamentoDTO dto) {
+        FormaPagamentoDTO criado = formaPagamentoService.salvar(dto);
         return ResponseEntity.ok(criado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FormaPagamento> atualizar(@PathVariable Long id, @RequestBody FormaPagamento formaPagamentoAtualizado) {
+    public ResponseEntity<FormaPagamentoDTO> atualizar(
+            @PathVariable Long id,
+            @RequestBody FormaPagamentoDTO dto) {
+
         try {
-            FormaPagamento atualizado = formaPagamentoService.atualizar(id, formaPagamentoAtualizado);
+            FormaPagamentoDTO atualizado = formaPagamentoService.atualizar(id, dto);
             return ResponseEntity.ok(atualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
