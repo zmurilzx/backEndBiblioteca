@@ -7,25 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-10-23T14:00:27-0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 24.0.1 (Oracle Corporation)"
+    date = "2025-10-24T03:55:58-0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.15 (Microsoft)"
 )
 @Component
 public class ClienteMapperImpl implements ClienteMapper {
-
-    @Override
-    public ClienteDTO toDTO(Cliente cliente) {
-        if ( cliente == null ) {
-            return null;
-        }
-
-        ClienteDTO clienteDTO = new ClienteDTO();
-
-        clienteDTO.setId( cliente.getId() );
-        clienteDTO.setNome( cliente.getNome() );
-
-        return clienteDTO;
-    }
 
     @Override
     public Cliente toEntity(ClienteDTO dto) {
@@ -35,9 +21,35 @@ public class ClienteMapperImpl implements ClienteMapper {
 
         Cliente cliente = new Cliente();
 
+        cliente.setSexo( mapSexo( dto.getSexo() ) );
         cliente.setNome( dto.getNome() );
+        cliente.setCpf( dto.getCpf() );
+        cliente.setRg( dto.getRg() );
+        cliente.setDataNascimento( dto.getDataNascimento() );
+        cliente.setObservacoes( dto.getObservacoes() );
+        cliente.setAtivo( dto.getAtivo() );
         cliente.setId( dto.getId() );
 
         return cliente;
+    }
+
+    @Override
+    public ClienteDTO toDTO(Cliente cliente) {
+        if ( cliente == null ) {
+            return null;
+        }
+
+        ClienteDTO clienteDTO = new ClienteDTO();
+
+        clienteDTO.setSexo( mapSexoString( cliente.getSexo() ) );
+        clienteDTO.setId( cliente.getId() );
+        clienteDTO.setNome( cliente.getNome() );
+        clienteDTO.setCpf( cliente.getCpf() );
+        clienteDTO.setRg( cliente.getRg() );
+        clienteDTO.setDataNascimento( cliente.getDataNascimento() );
+        clienteDTO.setAtivo( cliente.getAtivo() );
+        clienteDTO.setObservacoes( cliente.getObservacoes() );
+
+        return clienteDTO;
     }
 }

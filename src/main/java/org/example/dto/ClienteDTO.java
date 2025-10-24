@@ -1,9 +1,9 @@
-// FileName: /backEndBiblioteca/src/main/java/org/example/dto/ClienteDTO.java
 package org.example.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.Date;
 
 public class ClienteDTO {
 
@@ -20,18 +20,25 @@ public class ClienteDTO {
     @Size(max = 15, message = "Telefone deve ter no máximo 15 caracteres")
     private String telefone;
 
-    // Construtores (opcional)
-    public ClienteDTO() {
-    }
+    @NotBlank(message = "CPF é obrigatório")
+    @Size(max = 14, message = "CPF deve ter no máximo 14 caracteres")
+    private String cpf;
 
-    public ClienteDTO(Long id, String nome, String email, String telefone) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.telefone = telefone;
-    }
+    @NotBlank(message = "RG é obrigatório")
+    @Size(max = 9, message = "RG deve ter no máximo 9 caracteres")
+    private String rg;
 
-    // Getters e setters
+    @NotBlank(message = "Sexo é obrigatório")
+    private String sexo; // MASCULINO, FEMININO ou OUTRO
+
+    private Date dataNascimento;
+
+    private Boolean ativo;
+
+    @Size(max = 20, message = "Observações deve ter no máximo 20 caracteres")
+    private String observacoes;
+
+    public ClienteDTO() {}
 
     public Long getId() {
         return id;
@@ -39,14 +46,6 @@ public class ClienteDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public String getEmail() {
@@ -57,11 +56,67 @@ public class ClienteDTO {
         this.email = email;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public String getTelefone() {
         return telefone;
     }
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getRg() {
+        return rg;
+    }
+
+    public void setRg(String rg) {
+        this.rg = rg;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public Date getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(Date dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
     }
 }
