@@ -30,7 +30,7 @@ public class FormaPagamento {
     @Column(name = "TAXA_PERCENTUAL", precision = 5, scale = 2)
     private java.math.BigDecimal taxaPercentual;
 
-    @Column(name = "ATIVO", nullable = false)
+    @Column(name = "ATIVO")
     private Boolean ativo;
 
 

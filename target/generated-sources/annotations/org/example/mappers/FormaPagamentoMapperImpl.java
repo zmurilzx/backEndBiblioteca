@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-10-24T03:55:58-0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.15 (Microsoft)"
+    date = "2025-10-27T15:38:58-0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
 )
 @Component
 public class FormaPagamentoMapperImpl implements FormaPagamentoMapper {
@@ -22,8 +22,13 @@ public class FormaPagamentoMapperImpl implements FormaPagamentoMapper {
         FormaPagamentoDTO formaPagamentoDTO = new FormaPagamentoDTO();
 
         formaPagamentoDTO.setId( entity.getId() );
+        formaPagamentoDTO.setDescricao( entity.getDescricao() );
         formaPagamentoDTO.setTipo( entity.getTipo() );
+        formaPagamentoDTO.setNumeroParcelas( entity.getNumeroParcelas() );
         formaPagamentoDTO.setDiasEntreParcelas( entity.getDiasEntreParcelas() );
+        formaPagamentoDTO.setPermiteTroco( entity.isPermiteTroco() );
+        formaPagamentoDTO.setTaxaPercentual( entity.getTaxaPercentual() );
+        formaPagamentoDTO.setAtivo( entity.isAtivo() );
 
         return formaPagamentoDTO;
     }
@@ -37,8 +42,17 @@ public class FormaPagamentoMapperImpl implements FormaPagamentoMapper {
         FormaPagamento formaPagamento = new FormaPagamento();
 
         formaPagamento.setId( dto.getId() );
+        formaPagamento.setDescricao( dto.getDescricao() );
         formaPagamento.setTipo( dto.getTipo() );
+        formaPagamento.setNumeroParcelas( dto.getNumeroParcelas() );
         formaPagamento.setDiasEntreParcelas( dto.getDiasEntreParcelas() );
+        if ( dto.getPermiteTroco() != null ) {
+            formaPagamento.setPermiteTroco( dto.getPermiteTroco() );
+        }
+        formaPagamento.setTaxaPercentual( dto.getTaxaPercentual() );
+        if ( dto.getAtivo() != null ) {
+            formaPagamento.setAtivo( dto.getAtivo() );
+        }
 
         return formaPagamento;
     }

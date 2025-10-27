@@ -28,9 +28,9 @@ public class FormaPagamentoService {
         if (dto.getTipo() == null || dto.getTipo().isBlank()) {
             throw new IllegalArgumentException("Tipo de forma de pagamento não pode ser vazio.");
         }
-        if (dto.getParcelas() != null && dto.getParcelas() < 1) {
-            throw new IllegalArgumentException("Parcelas devem ser maiores ou iguais a 1.");
-        }
+//        if (dto.getParcelas() != null && dto.getParcelas() < 1) {
+//            throw new IllegalArgumentException("Parcelas devem ser maiores ou iguais a 1.");
+//        }
         if (dto.getDiasEntreParcelas() != null && dto.getDiasEntreParcelas() < 0) {
             throw new IllegalArgumentException("Dias entre parcelas não pode ser negativo.");
         }
