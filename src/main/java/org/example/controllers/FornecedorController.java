@@ -1,7 +1,9 @@
 package org.example.controllers;
 
-import org.example.entities.Fornecedor;
+import jakarta.validation.Valid;
+import org.example.dto.FornecedorDTO;
 import org.example.services.FornecedorService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,54 +20,35 @@ public class FornecedorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Fornecedor>> listarTodos() {
-        List<Fornecedor> fornecedores = fornecedorService.listarTodos();
-        return ResponseEntity.ok(fornecedores);
+    public ResponseEntity<List<FornecedorDTO>> listarTodos() {
+        return ResponseEntity.ok(fornecedorService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Fornecedor> buscarPorId(@PathVariable Long id) {
-        try {
-            Fornecedor fornecedor = fornecedorService.buscarPorId(id);
-            return ResponseEntity.ok(fornecedor);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<FornecedorDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(fornecedorService.buscarPorId(id));
     }
 
     @GetMapping("/cnpj/{cnpj}")
-    public ResponseEntity<Fornecedor> buscarPorCnpj(@PathVariable String cnpj) {
-        try {
-            Fornecedor fornecedor = fornecedorService.buscarPorCnpj(cnpj);
-            return ResponseEntity.ok(fornecedor);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<FornecedorDTO> buscarPorCnpj(@PathVariable String cnpj) {
+        return ResponseEntity.ok(fornecedorService.buscarPorCnpj(cnpj));
     }
 
     @PostMapping
-    public ResponseEntity<Fornecedor> criar(@RequestBody Fornecedor fornecedor) {
-        Fornecedor criado = fornecedorService.salvar(fornecedor);
-        return ResponseEntity.ok(criado);
+    public ResponseEntity<FornecedorDTO> criar(@Valid @RequestBody FornecedorDTO dto) {
+        FornecedorDTO criado = fornecedorService.salvar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Fornecedor> atualizar(@PathVariable Long id, @RequestBody Fornecedor fornecedorAtualizado) {
-        try {
-            Fornecedor atualizado = fornecedorService.atualizar(id, fornecedorAtualizado);
-            return ResponseEntity.ok(atualizado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<FornecedorDTO> atualizar(@PathVariable Long id, @Valid @RequestBody FornecedorDTO dto) {
+        FornecedorDTO atualizado = fornecedorService.atualizar(id, dto);
+        return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        try {
-            fornecedorService.deletar(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        fornecedorService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.dto.LivroDTO;
 import org.example.entities.Livro;
+import org.example.exceptions.DuplicateResourceException;
 import org.example.exceptions.LivroNotFoundException;
 import org.example.mappers.LivroMapper;
 import org.example.repositories.LivroRepository;
@@ -25,10 +26,16 @@ public class LivroService {
 
     public LivroDTO salvar(LivroDTO dto) {
         // Validação simples: ISBN não pode ser vazio
-        if (dto.getIsbn() == null || dto.getIsbn().isBlank()) {
+        String isbn = normalizeIsbn(dto.getIsbn());
+        if (isbn.isEmpty()) {
             throw new IllegalArgumentException("ISBN não pode ser vazio");
         }
+        livroRepository.findByIsbn(isbn).ifPresent(livro -> {
+            throw new DuplicateResourceException("Já existe um livro cadastrado com o ISBN informado.");
+        });
+
         Livro livro = livroMapper.toEntity(dto);
+        livro.setIsbn(isbn);
         Livro salvo = livroRepository.save(livro);
         return livroMapper.toDTO(salvo);
     }
@@ -57,8 +64,20 @@ public class LivroService {
         Livro livroExistente = livroRepository.findById(id)
                 .orElseThrow(() -> new LivroNotFoundException("Livro com ID " + id + " não encontrado."));
 
+        String isbn = normalizeIsbn(dto.getIsbn());
+        if (isbn.isEmpty()) {
+            throw new IllegalArgumentException("ISBN não pode ser vazio");
+        }
+
+        livroRepository.findByIsbn(isbn)
+                .filter(outroLivro -> !outroLivro.getId().equals(livroExistente.getId()))
+                .ifPresent(outroLivro -> {
+                    throw new DuplicateResourceException("Já existe um livro cadastrado com o ISBN informado.");
+                });
+
         Livro livroAtualizado = livroMapper.toEntity(dto);
         livroAtualizado.setId(livroExistente.getId());
+        livroAtualizado.setIsbn(isbn);
 
         Livro salvo = livroRepository.save(livroAtualizado);
         return livroMapper.toDTO(salvo);
@@ -69,5 +88,9 @@ public class LivroService {
         return page.stream()
                 .map(livroMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    private String normalizeIsbn(String isbn) {
+        return isbn == null ? "" : isbn.trim();
     }
 }

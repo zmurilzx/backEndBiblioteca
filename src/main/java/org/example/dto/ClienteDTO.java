@@ -1,8 +1,11 @@
 package org.example.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+
 import java.util.Date;
 
 public class ClienteDTO {
@@ -29,8 +32,10 @@ public class ClienteDTO {
     private String rg;
 
     @NotBlank(message = "Sexo é obrigatório")
+    @Pattern(regexp = "(?i)MASCULINO|FEMININO|OUTRO", message = "Sexo deve ser MASCULINO, FEMININO ou OUTRO")
     private String sexo; // MASCULINO, FEMININO ou OUTRO
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dataNascimento;
 
     private Boolean ativo;

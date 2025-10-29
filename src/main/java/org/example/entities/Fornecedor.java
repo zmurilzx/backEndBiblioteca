@@ -1,6 +1,7 @@
 package org.example.entities;
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class Fornecedor {
@@ -28,8 +29,14 @@ public class Fornecedor {
     @Column(name = "CONTATORESPONSAVEL", length = 100)
     private String contatoResponsavel;
 
+    @Column(name = "TELEFONE", length = 20)
+    private String telefone;
+
+    @Column(name = "ENDERECO", length = 200)
+    private String endereco;
+
     @Column(name = "DATACADASTRO")
-    private Date dataCadastro;
+    private LocalDateTime dataCadastro;
 
     @Column(name = "ATIVO")
     private Boolean ativo;
@@ -40,7 +47,7 @@ public class Fornecedor {
     public Fornecedor() {
     }
 
-    public Fornecedor(Long id, String razaoSocial, String nomeFantasia, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String contatoResponsavel, Date dataCadastro, Boolean ativo, String observacoes) {
+    public Fornecedor(Long id, String razaoSocial, String nomeFantasia, String cnpj, String inscricaoEstadual, String inscricaoMunicipal, String contatoResponsavel, String telefone, String endereco, LocalDateTime dataCadastro, Boolean ativo, String observacoes) {
         this.id = id;
         this.razaoSocial = razaoSocial;
         this.nomeFantasia = nomeFantasia;
@@ -48,6 +55,8 @@ public class Fornecedor {
         this.inscricaoEstadual = inscricaoEstadual;
         this.inscricaoMunicipal = inscricaoMunicipal;
         this.contatoResponsavel = contatoResponsavel;
+        this.telefone = telefone;
+        this.endereco = endereco;
         this.dataCadastro = dataCadastro;
         this.ativo = ativo;
         this.observacoes = observacoes;
@@ -109,11 +118,27 @@ public class Fornecedor {
         this.contatoResponsavel = contatoResponsavel;
     }
 
-    public Date getDataCadastro() {
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public LocalDateTime getDataCadastro() {
         return dataCadastro;
     }
 
-    public void setDataCadastro(Date dataCadastro) {
+    public void setDataCadastro(LocalDateTime dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 
@@ -131,5 +156,12 @@ public class Fornecedor {
 
     public void setObservacoes(String observacoes) {
         this.observacoes = observacoes;
+    }
+
+    @PrePersist
+    public void preencherDataCadastro() {
+        if (dataCadastro == null) {
+            dataCadastro = LocalDateTime.now();
+        }
     }
 }
