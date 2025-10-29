@@ -23,12 +23,10 @@ public interface ClienteMapper {
 
     @Named("mapSexo")
     default Sexo mapSexo(String sexo) {
-        if (sexo == null) return null;
-        try {
-            return Sexo.valueOf(sexo.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return null; // evita crash se o valor for inválido
+        if (sexo == null) {
+            return null;
         }
+        return Sexo.valueOf(sexo.toUpperCase());
     }
 
     @Named("mapSexoString")

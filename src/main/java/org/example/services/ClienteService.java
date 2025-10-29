@@ -2,7 +2,9 @@ package org.example.services;
 
 import org.example.dto.ClienteDTO;
 import org.example.entities.Cliente;
+import org.example.enums.Sexo;
 import org.example.exceptions.ClienteNotFoundException;
+import org.example.exceptions.DuplicateResourceException;
 import org.example.mappers.ClienteMapper;
 import org.example.repositories.ClienteRepository;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,9 @@ public class ClienteService {
             throw new IllegalArgumentException("Nome do cliente não pode ser vazio");
         if (dto.getEmail() == null || dto.getEmail().isBlank())
             throw new IllegalArgumentException("Email do cliente não pode ser vazio");
+
+        validarSexo(dto.getSexo());
+        validarDuplicidades(dto, null);
 
         Cliente cliente = clienteMapper.toEntity(dto);
         Cliente salvo = clienteRepository.save(cliente);
@@ -56,6 +61,9 @@ public class ClienteService {
         Cliente clienteExistente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ClienteNotFoundException("Cliente com ID " + id + " não encontrado."));
 
+        validarSexo(dto.getSexo());
+        validarDuplicidades(dto, clienteExistente.getId());
+
         Cliente clienteAtualizado = clienteMapper.toEntity(dto);
         clienteAtualizado.setId(clienteExistente.getId());
 
@@ -78,5 +86,36 @@ public class ClienteService {
         return clienteRepository.findByCpf(cpf)
                 .map(clienteMapper::toDTO)
                 .orElseThrow(() -> new ClienteNotFoundException("Cliente com CPF " + cpf + " não encontrado."));
+    }
+
+    private void validarDuplicidades(ClienteDTO dto, Long idExistente) {
+        clienteRepository.findByCpf(dto.getCpf())
+                .filter(cliente -> !cliente.getId().equals(idExistente))
+                .ifPresent(cliente -> {
+                    throw new DuplicateResourceException("Já existe um cliente cadastrado com o CPF informado.");
+                });
+
+        clienteRepository.findByRg(dto.getRg())
+                .filter(cliente -> !cliente.getId().equals(idExistente))
+                .ifPresent(cliente -> {
+                    throw new DuplicateResourceException("Já existe um cliente cadastrado com o RG informado.");
+                });
+
+        clienteRepository.findByEmail(dto.getEmail())
+                .filter(cliente -> !cliente.getId().equals(idExistente))
+                .ifPresent(cliente -> {
+                    throw new DuplicateResourceException("Já existe um cliente cadastrado com o email informado.");
+                });
+    }
+
+    private void validarSexo(String sexo) {
+        if (sexo == null) {
+            throw new IllegalArgumentException("Sexo é obrigatório");
+        }
+        try {
+            Sexo.valueOf(sexo.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Sexo inválido. Valores aceitos: MASCULINO, FEMININO ou OUTRO.");
+        }
     }
 }
