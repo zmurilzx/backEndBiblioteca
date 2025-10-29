@@ -3,6 +3,7 @@ package org.example.controllers;
 import jakarta.validation.Valid;
 import org.example.dto.LivroDTO;
 import org.example.services.LivroService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class LivroController {
     @PostMapping
     public ResponseEntity<LivroDTO> criar(@Valid @RequestBody LivroDTO dto) {
         LivroDTO criado = livroService.salvar(dto);
-        return ResponseEntity.ok(criado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
 
     @PutMapping("/{id}")
