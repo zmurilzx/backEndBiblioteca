@@ -52,6 +52,15 @@ public class ClienteController {
         return ResponseEntity.ok(clientes);
     }
 
+    @GetMapping("/inadimplentes")
+    public ResponseEntity<List<ClienteDTO>> listarInadimplentes() {
+        List<ClienteDTO> clientes = clienteService.listarClientesComEmprestimosAtrasados();
+        if (clientes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(clientes);
+    }
+
     @PostMapping
     public ResponseEntity<ClienteDTO> criar(@Valid @RequestBody ClienteDTO dto) {
         ClienteDTO criado = clienteService.salvar(dto);

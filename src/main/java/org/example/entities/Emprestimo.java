@@ -39,12 +39,15 @@ public class Emprestimo {
     @Column(name = "MULTA", precision = 10, scale = 2)
     private BigDecimal multa;
 
+    @Column(name = "BIBLIOTECARIO_RESPONSAVEL", length = 120)
+    private String bibliotecarioResponsavel;
+
     public Emprestimo() {
     }
 
     public Emprestimo(Long id, Livro livro, Cliente cliente, LocalDate dataEmprestimo,
                        LocalDate dataDevolucaoPrevista, LocalDate dataDevolucaoReal,
-                       StatusEmprestimo status, BigDecimal multa) {
+                       StatusEmprestimo status, BigDecimal multa, String bibliotecarioResponsavel) {
         this.id = id;
         this.livro = livro;
         this.cliente = cliente;
@@ -53,6 +56,7 @@ public class Emprestimo {
         this.dataDevolucaoReal = dataDevolucaoReal;
         this.status = status;
         this.multa = multa;
+        this.bibliotecarioResponsavel = bibliotecarioResponsavel;
     }
 
     public Long getId() {
@@ -117,5 +121,13 @@ public class Emprestimo {
 
     public void setMulta(BigDecimal multa) {
         this.multa = multa;
+    }
+
+    public String getBibliotecarioResponsavel() {
+        return bibliotecarioResponsavel;
+    }
+
+    public void setBibliotecarioResponsavel(String bibliotecarioResponsavel) {
+        this.bibliotecarioResponsavel = bibliotecarioResponsavel;
     }
 }

@@ -2,6 +2,7 @@ package org.example.controllers;
 
 import jakarta.validation.Valid;
 import org.example.dto.FornecedorDTO;
+import org.example.dto.FornecedorIndicadorDTO;
 import org.example.services.FornecedorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,11 @@ public class FornecedorController {
     @GetMapping("/cnpj/{cnpj}")
     public ResponseEntity<FornecedorDTO> buscarPorCnpj(@PathVariable String cnpj) {
         return ResponseEntity.ok(fornecedorService.buscarPorCnpj(cnpj));
+    }
+
+    @GetMapping("/indicadores")
+    public ResponseEntity<List<FornecedorIndicadorDTO>> indicadores() {
+        return ResponseEntity.ok(fornecedorService.listarIndicadoresEstoque());
     }
 
     @PostMapping

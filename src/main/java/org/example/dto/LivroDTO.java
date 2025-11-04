@@ -25,6 +25,8 @@ public class LivroDTO {
 
     private Integer anoPublicacao;
 
+    private Integer estoque;
+
     // Construtores (opcional)
     public LivroDTO() {
     }
@@ -86,5 +88,13 @@ public class LivroDTO {
 
     public void setAnoPublicacao(Integer anoPublicacao) {
         this.anoPublicacao = anoPublicacao;
+    }
+
+    public Integer getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(Integer estoque) {
+        this.estoque = estoque;
     }
 }

@@ -53,6 +53,18 @@ public class LivroService {
                 .collect(Collectors.toList());
     }
 
+    public List<LivroDTO> listarDisponiveis() {
+        return livroRepository.findByEstoqueGreaterThan(0).stream()
+                .map(livroMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<LivroDTO> listarIndisponiveis() {
+        return livroRepository.findByEstoqueLessThanEqual(0).stream()
+                .map(livroMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public void deletar(Long id) {
         if (!livroRepository.existsById(id)) {
             throw new LivroNotFoundException("Livro com ID " + id + " não encontrado.");
