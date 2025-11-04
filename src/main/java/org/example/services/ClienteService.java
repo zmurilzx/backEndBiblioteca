@@ -10,6 +10,7 @@ import org.example.repositories.ClienteRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,6 +87,13 @@ public class ClienteService {
         return clienteRepository.findByCpf(cpf)
                 .map(clienteMapper::toDTO)
                 .orElseThrow(() -> new ClienteNotFoundException("Cliente com CPF " + cpf + " não encontrado."));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ClienteDTO> listarClientesComEmprestimosAtrasados() {
+        return clienteRepository.findClientesComEmprestimosAtrasados().stream()
+                .map(clienteMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     private void validarDuplicidades(ClienteDTO dto, Long idExistente) {

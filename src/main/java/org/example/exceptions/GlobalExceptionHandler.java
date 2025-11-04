@@ -19,7 +19,8 @@ public class GlobalExceptionHandler {
             ClienteNotFoundException.class,
             FornecedorNotFoundException.class,
             FormaPagamentoNotFoundException.class,
-            LivroNotFoundException.class
+            LivroNotFoundException.class,
+            EmprestimoNotFoundException.class
     })
     public ResponseEntity<Object> handleNotFound(RuntimeException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    @ExceptionHandler({IllegalStateException.class, DuplicateResourceException.class})
+    @ExceptionHandler({IllegalStateException.class, DuplicateResourceException.class, LivroIndisponivelException.class})
     public ResponseEntity<Object> handleConflict(RuntimeException ex) {
         return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
     }

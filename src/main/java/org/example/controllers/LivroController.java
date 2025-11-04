@@ -44,6 +44,24 @@ public class LivroController {
         return ResponseEntity.ok(livros);
     }
 
+    @GetMapping("/disponiveis")
+    public ResponseEntity<List<LivroDTO>> listarDisponiveis() {
+        List<LivroDTO> livros = livroService.listarDisponiveis();
+        if (livros.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(livros);
+    }
+
+    @GetMapping("/emprestados")
+    public ResponseEntity<List<LivroDTO>> listarIndisponiveis() {
+        List<LivroDTO> livros = livroService.listarIndisponiveis();
+        if (livros.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(livros);
+    }
+
     @PostMapping
     public ResponseEntity<LivroDTO> criar(@Valid @RequestBody LivroDTO dto) {
         LivroDTO criado = livroService.salvar(dto);

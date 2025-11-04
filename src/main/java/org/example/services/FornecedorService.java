@@ -1,11 +1,14 @@
 package org.example.services;
 
 import org.example.dto.FornecedorDTO;
+import org.example.dto.FornecedorIndicadorDTO;
 import org.example.entities.Fornecedor;
 import org.example.exceptions.DuplicateResourceException;
 import org.example.exceptions.FornecedorNotFoundException;
 import org.example.mappers.FornecedorMapper;
+import org.example.repositories.LivroRepository;
 import org.example.repositories.FornecedorRepository;
+import org.example.repositories.projections.FornecedorEstoqueProjection;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,10 +20,14 @@ public class FornecedorService {
 
     private final FornecedorRepository fornecedorRepository;
     private final FornecedorMapper fornecedorMapper;
+    private final LivroRepository livroRepository;
 
-    public FornecedorService(FornecedorRepository fornecedorRepository, FornecedorMapper fornecedorMapper) {
+    public FornecedorService(FornecedorRepository fornecedorRepository,
+                             FornecedorMapper fornecedorMapper,
+                             LivroRepository livroRepository) {
         this.fornecedorRepository = fornecedorRepository;
         this.fornecedorMapper = fornecedorMapper;
+        this.livroRepository = livroRepository;
     }
 
     public List<FornecedorDTO> listarTodos() {
@@ -72,6 +79,17 @@ public class FornecedorService {
             throw new FornecedorNotFoundException("Fornecedor não encontrado com ID: " + id);
         }
         fornecedorRepository.deleteById(id);
+    }
+
+    public List<FornecedorIndicadorDTO> listarIndicadoresEstoque() {
+        List<FornecedorEstoqueProjection> resultados = livroRepository.buscarIndicadoresPorFornecedor();
+        return resultados.stream()
+                .map(projecao -> new FornecedorIndicadorDTO(
+                        projecao.getFornecedorId(),
+                        projecao.getRazaoSocial(),
+                        projecao.getTotalTitulos() != null ? projecao.getTotalTitulos() : 0,
+                        projecao.getTotalEstoque() != null ? projecao.getTotalEstoque() : 0))
+                .collect(Collectors.toList());
     }
 
     private void validarCnpj(String cnpj) {
