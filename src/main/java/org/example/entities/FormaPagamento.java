@@ -2,7 +2,6 @@ package org.example.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 public class FormaPagamento {
@@ -12,24 +11,33 @@ public class FormaPagamento {
     @Column(name = "ID")
     private Long id;
 
+    @NotBlank(message = "A descrição é obrigatória")
+    @Size(max = 50, message = "A descrição deve ter no máximo 50 caracteres")
     @Column(name = "DESCRICAO", nullable = false, length = 50)
     private String descricao;
 
+    @NotBlank(message = "O tipo é obrigatório")
+    @Size(max = 50, message = "O tipo deve ter no máximo 50 caracteres")
     @Column(name = "TIPO", nullable = false, length = 50)
     private String tipo;
 
+    @Positive(message = "O número de parcelas deve ser maior que zero")
     @Column(name = "NUMEROPARCELAS")
     private Integer numeroParcelas;
 
+    @PositiveOrZero(message = "Os dias entre parcelas não podem ser negativos")
     @Column(name = "DIAS_ENTRE_PARCELAS")
     private Integer diasEntreParcelas;
 
     @Column(name = "PERMITETROCO", nullable = false)
     private boolean permiteTroco;
 
+    @DecimalMin(value = "0.00", message = "A taxa deve ser maior ou igual a zero")
+    @DecimalMax(value = "100.00", message = "A taxa deve ser menor ou igual a 100")
     @Column(name = "TAXA_PERCENTUAL", precision = 5, scale = 2)
     private java.math.BigDecimal taxaPercentual;
 
+    @NotNull(message = "O status de ativo é obrigatório")
     @Column(name = "ATIVO")
     private Boolean ativo;
 
