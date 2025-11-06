@@ -1,6 +1,7 @@
 package org.example.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import org.example.enums.StatusEmprestimo;
 
 import java.math.BigDecimal;
@@ -15,30 +16,40 @@ public class Emprestimo {
     @Column(name = "ID")
     private Long id;
 
+    @NotNull(message = "O livro é obrigatório")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "LIVRO_ID", nullable = false)
     private Livro livro;
 
+    @NotNull(message = "O cliente é obrigatório")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CLIENTE_ID", nullable = false)
     private Cliente cliente;
 
+    @NotNull(message = "A data do empréstimo é obrigatória")
+    @PastOrPresent(message = "A data do empréstimo não pode ser futura")
     @Column(name = "DATA_EMPRESTIMO", nullable = false)
     private LocalDate dataEmprestimo;
 
+    @NotNull(message = "A data de devolução prevista é obrigatória")
+    @FutureOrPresent(message = "A data de devolução prevista deve ser futura ou presente")
     @Column(name = "DATA_DEVOLUCAO_PREVISTA", nullable = false)
     private LocalDate dataDevolucaoPrevista;
 
     @Column(name = "DATA_DEVOLUCAO_REAL")
+    @PastOrPresent(message = "A data de devolução real não pode ser futura")
     private LocalDate dataDevolucaoReal;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "O status é obrigatório")
     @Column(name = "STATUS", nullable = false, length = 20)
     private StatusEmprestimo status;
 
+    @DecimalMin(value = "0.00", inclusive = true, message = "A multa deve ser maior ou igual a zero")
     @Column(name = "MULTA", precision = 10, scale = 2)
     private BigDecimal multa;
 
+    @Size(max = 120, message = "O bibliotecário responsável deve ter no máximo 120 caracteres")
     @Column(name = "BIBLIOTECARIO_RESPONSAVEL", length = 120)
     private String bibliotecarioResponsavel;
 

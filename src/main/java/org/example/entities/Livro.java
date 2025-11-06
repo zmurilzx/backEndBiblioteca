@@ -1,6 +1,8 @@
 package org.example.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
 import java.time.LocalDate;
 
 @Entity
@@ -12,22 +14,33 @@ public class Livro {
     @Column(name = "ID")
     private Long id;
 
+    @NotBlank(message = "O título é obrigatório")
+    @Size(max = 255, message = "O título deve ter no máximo 255 caracteres")
     @Column(name = "TITULO", nullable = false)
     private String titulo;
 
+    @NotBlank(message = "O autor é obrigatório")
+    @Size(max = 255, message = "O autor deve ter no máximo 255 caracteres")
     @Column(name = "AUTOR", nullable = false)
     private String autor;
 
+    @NotBlank(message = "O ISBN é obrigatório")
+    @Pattern(regexp = "^(97(8|9))?\\d{9}(\\d|X)$", message = "O ISBN deve conter 10 ou 13 dígitos válidos")
+    @Size(max = 20, message = "O ISBN deve ter no máximo 20 caracteres")
     @Column(name = "ISBN", unique = true, nullable = false)
     private String isbn;
 
     @Column(name = "DATA_PUBLICACAO")
+    @PastOrPresent(message = "A data de publicação não pode ser futura")
     private LocalDate dataPublicacao;
 
+    @NotNull(message = "O estoque é obrigatório")
+    @Min(value = 0, message = "O estoque deve ser maior ou igual a zero")
     @Column(name = "ESTOQUE")
     private Integer estoque;
 
     // Relacionamento ManyToOne com Fornecedor
+    @NotNull(message = "O fornecedor é obrigatório")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FORNECEDOR_ID")
     private Fornecedor fornecedor;

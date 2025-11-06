@@ -1,6 +1,9 @@
 package org.example.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Endereco {
@@ -10,21 +13,34 @@ public class Endereco {
     @Column(name = "ID")
     private Long id;
 
+    @NotBlank(message = "A rua é obrigatória")
+    @Size(max = 100, message = "A rua deve ter no máximo 100 caracteres")
     @Column(name = "RUA", nullable = false, length = 100)
     private String rua;
 
+    @NotBlank(message = "O número é obrigatório")
+    @Size(max = 10, message = "O número deve ter no máximo 10 caracteres")
     @Column(name = "NUMERO", nullable = false, length = 10)
     private String numero;
 
+    @NotBlank(message = "O bairro é obrigatório")
+    @Size(max = 50, message = "O bairro deve ter no máximo 50 caracteres")
     @Column(name = "BAIRRO", nullable = false, length = 50)
     private String bairro;
 
+    @NotBlank(message = "A cidade é obrigatória")
+    @Size(max = 50, message = "A cidade deve ter no máximo 50 caracteres")
     @Column(name = "CIDADE", nullable = false, length = 50)
     private String cidade;
 
+    @NotBlank(message = "O estado é obrigatório")
+    @Size(max = 50, message = "O estado deve ter no máximo 50 caracteres")
     @Column(name = "ESTADO", nullable = false, length = 50)
     private String estado;
 
+    @NotBlank(message = "O CEP é obrigatório")
+    @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "O CEP deve seguir o formato 00000-000")
+    @Size(max = 10, message = "O CEP deve ter no máximo 10 caracteres")
     @Column(name = "CEP", nullable = false, length = 10)
     private String cep;
 
