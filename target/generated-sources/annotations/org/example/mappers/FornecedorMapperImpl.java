@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-10-27T15:38:58-0300",
+    date = "2025-11-06T14:22:51-0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
 )
 @Component
@@ -25,6 +25,14 @@ public class FornecedorMapperImpl implements FornecedorMapper {
         fornecedorDTO.setRazaoSocial( fornecedor.getRazaoSocial() );
         fornecedorDTO.setNomeFantasia( fornecedor.getNomeFantasia() );
         fornecedorDTO.setCnpj( fornecedor.getCnpj() );
+        fornecedorDTO.setTelefone( fornecedor.getTelefone() );
+        fornecedorDTO.setEndereco( fornecedor.getEndereco() );
+        fornecedorDTO.setInscricaoEstadual( fornecedor.getInscricaoEstadual() );
+        fornecedorDTO.setInscricaoMunicipal( fornecedor.getInscricaoMunicipal() );
+        fornecedorDTO.setContatoResponsavel( fornecedor.getContatoResponsavel() );
+        fornecedorDTO.setAtivo( fornecedor.getAtivo() );
+        fornecedorDTO.setObservacoes( fornecedor.getObservacoes() );
+        fornecedorDTO.setDataCadastro( fornecedor.getDataCadastro() );
 
         return fornecedorDTO;
     }
@@ -41,7 +49,34 @@ public class FornecedorMapperImpl implements FornecedorMapper {
         fornecedor.setRazaoSocial( dto.getRazaoSocial() );
         fornecedor.setNomeFantasia( dto.getNomeFantasia() );
         fornecedor.setCnpj( dto.getCnpj() );
+        fornecedor.setInscricaoEstadual( dto.getInscricaoEstadual() );
+        fornecedor.setInscricaoMunicipal( dto.getInscricaoMunicipal() );
+        fornecedor.setContatoResponsavel( dto.getContatoResponsavel() );
+        fornecedor.setTelefone( dto.getTelefone() );
+        fornecedor.setEndereco( dto.getEndereco() );
+        fornecedor.setDataCadastro( dto.getDataCadastro() );
+        fornecedor.setAtivo( dto.getAtivo() );
+        fornecedor.setObservacoes( dto.getObservacoes() );
 
         return fornecedor;
+    }
+
+    @Override
+    public void updateEntityFromDto(FornecedorDTO dto, Fornecedor fornecedor) {
+        if ( dto == null ) {
+            return;
+        }
+
+        fornecedor.setRazaoSocial( dto.getRazaoSocial() );
+        fornecedor.setNomeFantasia( dto.getNomeFantasia() );
+        fornecedor.setCnpj( dto.getCnpj() );
+        fornecedor.setInscricaoEstadual( dto.getInscricaoEstadual() );
+        fornecedor.setInscricaoMunicipal( dto.getInscricaoMunicipal() );
+        fornecedor.setContatoResponsavel( dto.getContatoResponsavel() );
+        fornecedor.setTelefone( dto.getTelefone() );
+        fornecedor.setEndereco( dto.getEndereco() );
+        fornecedor.setDataCadastro( dto.getDataCadastro() );
+        fornecedor.setAtivo( dto.getAtivo() );
+        fornecedor.setObservacoes( dto.getObservacoes() );
     }
 }
