@@ -2,6 +2,7 @@ package org.example.controllers;
 
 import jakarta.validation.Valid;
 import org.example.dto.ClienteDTO;
+import org.example.dto.EnderecoDTO;
 import org.example.services.ClienteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,11 @@ public class ClienteController {
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<ClienteDTO> buscarPorCpf(@PathVariable String cpf) {
         return ResponseEntity.ok(clienteService.buscarPorCpf(cpf));
+    }
+
+    @GetMapping("/endereco/{cep}")
+    public ResponseEntity<EnderecoDTO> buscarEnderecoPorCep(@PathVariable String cep) {
+        return ResponseEntity.ok(clienteService.buscarEnderecoPorCep(cep));
     }
 
     @GetMapping("/rg/{rg}")

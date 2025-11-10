@@ -1,12 +1,16 @@
 package org.example.services;
 
 import org.example.dto.ClienteDTO;
+import org.example.dto.EnderecoDTO;
 import org.example.entities.Cliente;
 import org.example.enums.Sexo;
 import org.example.exceptions.ClienteNotFoundException;
 import org.example.exceptions.DuplicateResourceException;
 import org.example.mappers.ClienteMapper;
 import org.example.repositories.ClienteRepository;
+import org.example.utils.CpfValidator;
+import org.example.utils.EmailValidator;
+import org.example.utils.TelefoneValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,17 +24,16 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
     private final ClienteMapper clienteMapper;
+    private final CepService cepService;
 
-    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper) {
+    public ClienteService(ClienteRepository clienteRepository, ClienteMapper clienteMapper, CepService cepService) {
         this.clienteRepository = clienteRepository;
         this.clienteMapper = clienteMapper;
+        this.cepService = cepService;
     }
 
     public ClienteDTO salvar(ClienteDTO dto) {
-        if (dto.getNome() == null || dto.getNome().isBlank())
-            throw new IllegalArgumentException("Nome do cliente não pode ser vazio");
-        if (dto.getEmail() == null || dto.getEmail().isBlank())
-            throw new IllegalArgumentException("Email do cliente não pode ser vazio");
+        validarDadosBasicos(dto);
 
         validarSexo(dto.getSexo());
         validarDuplicidades(dto, null);
@@ -62,6 +65,7 @@ public class ClienteService {
         Cliente clienteExistente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ClienteNotFoundException("Cliente com ID " + id + " não encontrado."));
 
+        validarDadosBasicos(dto);
         validarSexo(dto.getSexo());
         validarDuplicidades(dto, clienteExistente.getId());
 
@@ -84,9 +88,17 @@ public class ClienteService {
     }
 
     public ClienteDTO buscarPorCpf(String cpf) {
-        return clienteRepository.findByCpf(cpf)
+        String cpfSanitizado = CpfValidator.sanitize(cpf);
+        if (!CpfValidator.isValid(cpfSanitizado)) {
+            throw new IllegalArgumentException("CPF informado é inválido");
+        }
+        return clienteRepository.findByCpf(cpfSanitizado)
                 .map(clienteMapper::toDTO)
                 .orElseThrow(() -> new ClienteNotFoundException("Cliente com CPF " + cpf + " não encontrado."));
+    }
+
+    public EnderecoDTO buscarEnderecoPorCep(String cep) {
+        return cepService.buscarEnderecoPorCep(cep);
     }
 
     @Transactional(readOnly = true)
@@ -114,6 +126,34 @@ public class ClienteService {
                 .ifPresent(cliente -> {
                     throw new DuplicateResourceException("Já existe um cliente cadastrado com o email informado.");
                 });
+    }
+
+    private void validarDadosBasicos(ClienteDTO dto) {
+        if (dto.getNome() == null || dto.getNome().isBlank()) {
+            throw new IllegalArgumentException("Nome do cliente não pode ser vazio");
+        }
+
+        String emailNormalizado = EmailValidator.normalize(dto.getEmail());
+        if (!EmailValidator.isValid(emailNormalizado)) {
+            throw new IllegalArgumentException("Email do cliente é inválido");
+        }
+        dto.setEmail(emailNormalizado);
+
+        String cpfSanitizado = CpfValidator.sanitize(dto.getCpf());
+        if (!CpfValidator.isValid(cpfSanitizado)) {
+            throw new IllegalArgumentException("CPF inválido");
+        }
+        dto.setCpf(cpfSanitizado);
+
+        if (dto.getTelefone() != null && !dto.getTelefone().isBlank()) {
+            String telefoneSanitizado = TelefoneValidator.sanitize(dto.getTelefone());
+            if (!TelefoneValidator.isValid(telefoneSanitizado)) {
+                throw new IllegalArgumentException("Telefone do cliente é inválido");
+            }
+            dto.setTelefone(telefoneSanitizado);
+        } else {
+            dto.setTelefone(null);
+        }
     }
 
     private void validarSexo(String sexo) {
